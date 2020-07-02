@@ -6,7 +6,7 @@ import logging
 import config
 import kb
 from db.main_db import sub_user_true, check_for_user, add_user, del_user, sub_user_false
-from utility import auit
+from utility import identification
 
 logging.basicConfig(level=logging.INFO)
 loger = logging.getLogger()
@@ -57,7 +57,7 @@ async def cmd_start(message: types.Message):
 
 
 @dp.message_handler(Command('subt'))
-@auit
+@identification
 async def sub_true(message: types.Message):
     us = sub_user_true(message.from_user.id)
     await message.reply(f'Check - {us}')
@@ -71,7 +71,7 @@ async def sub_false(message: types.Message):
 
 
 @dp.message_handler(commands=['help'])
-@auit
+@identification
 async def cmd_start(message: types.Message):
     await message.reply("""
     /check
