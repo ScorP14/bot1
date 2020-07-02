@@ -84,10 +84,8 @@ async def cmd_start(message: types.Message):
 
 
 @dp.message_handler(commands=['qwe'])
-@identification
-@subscriber
 async def cmd_start(message: types.Message):
-    await message.reply(f'All sub  {message.text}')
+    await message.reply(f'All qwe  {message.text}', reply_markup=kb.get_keyboard(message.from_user.id))
 
 
 @dp.message_handler()
