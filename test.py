@@ -6,7 +6,7 @@ import logging
 import config
 import kb
 from db.main_db import sub_user_true, check_for_user, add_user, del_user, sub_user_false
-from utility import identification
+from utility import identification, subscriber
 
 logging.basicConfig(level=logging.INFO)
 loger = logging.getLogger()
@@ -64,7 +64,7 @@ async def sub_true(message: types.Message):
 
 
 @dp.message_handler(Command('subf'))
-@auit
+@identification
 async def sub_false(message: types.Message):
     us = sub_user_false(message.from_user.id)
     await message.reply(f'Check - {us}')
@@ -79,8 +79,15 @@ async def cmd_start(message: types.Message):
     /del
     /subt
     /subf
+    /qwe
     """, reply_markup=kb.test_mk)
 
+
+@dp.message_handler(commands=['qwe'])
+@identification
+@subscriber
+async def cmd_start(message: types.Message):
+    await message.reply(f'All sub  {message.text}')
 
 
 @dp.message_handler()
