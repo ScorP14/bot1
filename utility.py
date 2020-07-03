@@ -4,8 +4,8 @@ from db.main_db import check_for_user, User
 
 def identification(func):
     async def decor(mes: types.Message):
-        check = check_for_user(mes.from_user.id)
-        if check:
+        user = check_for_user(mes.from_user.id)
+        if user:
             await func(mes)
         else:
             return await mes.answer('Доступ закрыт')

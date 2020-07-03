@@ -1,12 +1,12 @@
+from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 
-from db.main_db import User, get_user_by_id
+from db.main_db import User
 
 
 def get_keyboard(id_tg):
-
-    user = get_user_by_id(id_tg)
+    user = User.get_or_none(id_tg)
     if not user:
         user = User()
     kb = ReplyKeyboardMarkup(resize_keyboard=True,
@@ -38,11 +38,12 @@ keyboard_main = InlineKeyboardMarkup(inline_keyboard=[
 
 test_mk = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, keyboard=[
     [
-        KeyboardButton(text='pyk1'),
-        KeyboardButton(text='pyk2'),
-        KeyboardButton(text='pyk3')
+        KeyboardButton(text='/add'),
+        KeyboardButton(text='/del'),
+        KeyboardButton(text='/sub'),
+        KeyboardButton(text='/check'),
     ],
     [
-        KeyboardButton(text='pyk4')
+        KeyboardButton(text='/cancel')
     ]
 ])

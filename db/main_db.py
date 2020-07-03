@@ -1,5 +1,8 @@
 from peewee import *
 import datetime
+
+from peewee import logger
+
 from config import DB_DIR
 
 
@@ -9,7 +12,7 @@ db = SqliteDatabase(DB_DIR)
 class User(Model):
     telegram_id = IntegerField(unique=True, primary_key=True, verbose_name='ID_telegram')
     name = CharField(max_length=100, null=False, verbose_name='Имя')
-    date_add = DateTimeField(default=datetime.datetime.now(), verbose_name='Дата создания')
+    date_add = DateTimeField(default=datetime.datetime.now().strftime("%m/%d/%Y:%H.%M.%S"), verbose_name='Дата создания')
     sub = BooleanField(default=False, verbose_name='Подсписка')
 
     class Meta:
@@ -32,24 +35,25 @@ class Categories(Model):
         return f'{self.telegram_id}: {self.name} {self.sub}, {self.date_add}'
 
 
+def select_all():
+    sel = User.select()
+    for i in sel:
+        print(i)
+
+
+def get_user(id_tg):
+    return User.get_or_none(id_tg)
+
+
 def check_for_user(id_tg):
-    try:
-        User.select().where(User.telegram_id == id_tg).get()
+    user = User.get_or_none(id_tg)
+    if user:
         return True
-    except DoesNotExist:
-        return False
-
-
-def get_user_by_id(id_tg):
-    try:
-        user = User.select().where(User.telegram_id == id_tg).get()
-    except:
-        return False
-    return user
+    return False
 
 
 def sub_user_true(id_tg):
-    user = get_user_by_id(id_tg)
+    user = User.get_or_none(id_tg)
     if user:
         user.sub = True
         user.save()
@@ -58,7 +62,7 @@ def sub_user_true(id_tg):
 
 
 def sub_user_false(id_tg):
-    user = get_user_by_id(id_tg)
+    user = User.get_or_none(id_tg)
     if user:
         user.sub = False
         user.save()
@@ -74,19 +78,23 @@ def check_for_user_sub(id_tg):
         return False
 
 
-def add_user(id_tg, name):
-    User.create(telegram_id=id_tg, name=name)
-    return True
+def add_user(id_tg, name, sub=False):
+    user = User.get_or_none(id_tg)
+    if user:
+        return user, False
+    user = User.create(telegram_id=id_tg, name=name, sub=sub)
+    logger.info(f'Пользователь создан: {id_tg}-{name}, {user}')
+    return user, True
 
 
 def del_user(id_tg):
-    User.delete_by_id(id_tg)
+    user = User.get_or_none(id_tg)
+    if user:
+        logger.info(f'Пользователь удален: {user} в {datetime.datetime.now()}')
+        user.delete_by_id(id_tg)
+        return True
+    return False
 
-
-def select_all():
-    sel = User.select()
-    for i in sel:
-        print(i)
 
 """
 547865: Вася_4 False, 2020-06-30 20:46:12.118072
