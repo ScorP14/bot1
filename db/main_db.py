@@ -24,18 +24,24 @@ class User(Model):
 
 
 class Categories(Model):
-    categor = CharField(max_length=255, primary_key=True, unique=True, verbose_name='Категорая')
-    main_categor = BooleanField()
+    category = CharField(max_length=255, primary_key=True, unique=True, verbose_name='Категорая')
+    main_category = BooleanField()
     aliases = TextField()
 
     class Meta:
         database = db
 
     def __str__(self):
-        return f'{self.telegram_id}: {self.name} {self.sub}, {self.date_add}'
+        return f'{self.category} - {self.main_category}: {self.aliases}'
 
 
-def select_all():
+def select_all_category():
+    sel = Categories.select()
+    for i in sel:
+        if i.main_category:
+            print(i)
+
+def select_all_user():
     sel = User.select()
     for i in sel:
         print(i)
