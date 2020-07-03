@@ -25,8 +25,8 @@ class User(Model):
 
 class Categories(Model):
     category = CharField(max_length=255, primary_key=True, unique=True, verbose_name='Категорая')
-    main_category = BooleanField()
-    aliases = TextField()
+    main_category = BooleanField(verbose_name='Основной расход?')
+    aliases = TextField(verbose_name='Ключи')
 
     class Meta:
         database = db
@@ -35,11 +35,38 @@ class Categories(Model):
         return f'{self.category} - {self.main_category}: {self.aliases}'
 
 
+
+class Expenses(Model):
+    id = PrimaryKeyField(null=False)
+    user = ForeignKeyField(User, related_name='expenses')
+    category = ForeignKeyField(Categories, related_name='category')
+    text_mes = CharField(max_length=255, verbose_name='Сообщение')
+    date_add = DateTimeField(default=datetime.datetime.now(), verbose_name='Дата рассхода')
+    price = FloatField(verbose_name='Цена')
+
+    class Meta:
+        database = db
+
+    def __str__(self):
+        return f'{self.text_mes} - {self.user}: {self.price}'
+
+us = User.get_or_none(343554)
+ras = Expenses()
+
+
+
+
+
+
+
+
+
 def select_all_category():
     sel = Categories.select()
     for i in sel:
         if i.main_category:
             print(i)
+
 
 def select_all_user():
     sel = User.select()
@@ -100,6 +127,27 @@ def del_user(id_tg):
         user.delete_by_id(id_tg)
         return True
     return False
+
+
+
+us = User.get_or_none(468933460)
+def asd():
+    us = User.get_or_none(468933460)
+    cate = Categories.select()
+    mes = 'еда 2500'.lower()
+    mes = mes.split()
+    for i in cate:
+        alias = i.aliases.lower().split()
+        if mes[0] in alias:
+            print(i.category)
+            rashod = Expenses.create(user=us, category_id=i, price=float(mes[1]), text_mes=mes)
+            print(True)
+            break
+
+
+
+ex = Expenses.select().get()
+print(ex.user, ex.category)
 
 
 """
