@@ -146,6 +146,7 @@ def asd():
 
 
 
+
 ex = Expenses.select().get()
 print(ex.user, ex.category)
 
