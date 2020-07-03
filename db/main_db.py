@@ -5,14 +5,13 @@ from peewee import logger
 
 from config import DB_DIR
 
-
 db = SqliteDatabase(DB_DIR)
 
 
 class User(Model):
     telegram_id = IntegerField(unique=True, primary_key=True, verbose_name='ID_telegram')
     name = CharField(max_length=100, null=False, verbose_name='Имя')
-    date_add = DateTimeField(default=datetime.datetime.now().strftime("%m/%d/%Y:%H.%M.%S"), verbose_name='Дата создания')
+    date_add = DateTimeField(default=datetime.datetime.now().strftime("%d/%m/%Y:%H.%M.%S"), verbose_name='Дата создания')
     sub = BooleanField(default=False, verbose_name='Подсписка')
 
     class Meta:
@@ -36,23 +35,19 @@ class Categories(Model):
 
 
 
-class Expenses(Model):
+class Expenses(Model, ):
     id = PrimaryKeyField(null=False)
     user = ForeignKeyField(User, related_name='expenses')
     category = ForeignKeyField(Categories, related_name='category')
     text_mes = CharField(max_length=255, verbose_name='Сообщение')
-    date_add = DateTimeField(default=datetime.datetime.now(), verbose_name='Дата рассхода')
+    date_add = DateTimeField(default=datetime.datetime.now().strftime("%d/%m/%Y:%H.%M.%S"), verbose_name='Дата рассхода')
     price = FloatField(verbose_name='Цена')
 
     class Meta:
         database = db
 
     def __str__(self):
-        return f'{self.text_mes} - {self.user}: {self.price}'
-
-us = User.get_or_none(343554)
-ras = Expenses()
-
+        return f'{self.text_mes} - {self.date_add}: {self.price}'
 
 
 
@@ -130,26 +125,29 @@ def del_user(id_tg):
 
 
 
-us = User.get_or_none(468933460)
 def asd():
     us = User.get_or_none(468933460)
     cate = Categories.select()
-    mes = 'еда 2500'.lower()
+    mes = 'еда 320560'.lower()
     mes = mes.split()
     for i in cate:
         alias = i.aliases.lower().split()
         if mes[0] in alias:
-            print(i.category)
             rashod = Expenses.create(user=us, category_id=i, price=float(mes[1]), text_mes=mes)
-            print(True)
+
             break
 
 
 
-
-ex = Expenses.select().get()
-print(ex.user, ex.category)
-
+sel = Expenses.select().where(Expenses.date_add.month == 7)
+temp = 0
+for i in sel:
+    print(sel)
+print(temp)
+ex = Expenses.select()
+for i in ex:
+    print(sel)
+print(temp)
 
 """
 547865: Вася_4 False, 2020-06-30 20:46:12.118072
