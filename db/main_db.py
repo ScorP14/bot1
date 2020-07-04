@@ -143,8 +143,3 @@ def select_by_date(year, month):
     start, end = get_data_for_db(year, month)
     sel =User.select().where(User.date_add.between(start, end)).order_by(User.date_add)
     return sel
-
-
-
-for i in select_by_date(2020,7):
-    print(i)

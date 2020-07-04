@@ -1,14 +1,15 @@
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters import Command
 
 import logging
 
 import config
-import kb
-from db.main_db import sub_user_true, check_for_user, add_user, del_user, sub_user_false, get_user
+from kb import inline_keyboard_main, test_mk, main_callback_data
+from db.main_db import sub_user_true, add_user, del_user, sub_user_false, get_user
 
-from utility import identification
+from decorators import identification
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
@@ -16,12 +17,8 @@ logger = logging.getLogger()
 
 API_TOKEN = config.API_TOKEN
 bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot)
+dp = Dispatcher(bot, storage=MemoryStorage())
 dp.middleware.setup(LoggingMiddleware())
-
-
-
-
 
 
 
@@ -61,12 +58,38 @@ async def check(mes: types.Message):
 async def cmd_help(mes: types.Message):
     await mes.answer("""
     Я помога тебе с учетом рассходов
-    """, reply_markup=kb.test_mk)
+    """, reply_markup=test_mk)
 
 
 @dp.message_handler(commands=['cancel'])
 async def cancel(mes: types.Message):
     await mes.answer('Cancel', reply_markup=types.ReplyKeyboardRemove())
+
+
+
+
+
+
+
+@dp.message_handler(Command('test'))
+async def test(mes: types.Message):
+   await mes.answer('Главное меню', reply_markup=inline_keyboard_main)
+
+
+@dp.callback_query_handler(main_callback_data.filter(key=['User', 'Category', 'Cancel']))
+async def callback_vote_action(query: types.CallbackQuery, callback_data: dict):
+    await query.answer()
+    await bot.edit_message_text()
+    await bot.edit_message_text(
+        f'You voted {callback_data}! Now you have vote[s].',
+        query.from_user.id,
+        query.message.message_id
+    )
+
+
+
+
+
 
 
 @dp.message_handler()
