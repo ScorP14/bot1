@@ -1,9 +1,12 @@
+import random
+
 from peewee import *
 import datetime
 
 from peewee import logger
 
 from config import DB_DIR
+from db.utility_for_db import get_data_for_db
 
 db = SqliteDatabase(DB_DIR)
 
@@ -133,28 +136,15 @@ def asd():
     for i in cate:
         alias = i.aliases.lower().split()
         if mes[0] in alias:
-            rashod = Expenses.create(user=us, category_id=i, price=float(mes[1]), text_mes=mes)
-
+            Expenses.create(user=us, category_id=i, price=float(mes[1]), text_mes=mes)
             break
 
+def select_by_date(year, month):
+    start, end = get_data_for_db(year, month)
+    sel =User.select().where(User.date_add.between(start, end)).order_by(User.date_add)
+    return sel
 
 
-sel = Expenses.select().where(Expenses.date_add.month == 7)
-temp = 0
-for i in sel:
-    print(sel)
-print(temp)
-ex = Expenses.select()
-for i in ex:
-    print(sel)
-print(temp)
 
-"""
-547865: Вася_4 False, 2020-06-30 20:46:12.118072
-555974: Вася_13 False, 2020-06-30 20:46:12.118072
-655629: Вася_12 False, 2020-06-30 20:46:12.118072
-670480: Вася_7 False, 2020-06-30 20:46:12.118072
-813745: Вася_11 False, 2020-06-30 20:46:12.118072
-555974: Вася_8 False, 2020-06-30 20:46:12.118072
-924850: Вася_9 False, 2020-06-30 20:46:12.11807
-"""
+for i in select_by_date(2020,7):
+    print(i)
