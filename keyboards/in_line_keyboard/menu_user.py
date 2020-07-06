@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from keyboards.callback_data.callback import main_user_callback_data, test_del_callback_data, main_user_sub_alert_mes
-from utils.db_api.main_db import get_10user
+from utils.db_api.main_db import User
 
 inline_keyboard_main_user = InlineKeyboardMarkup(inline_keyboard=[
     [
@@ -27,14 +27,16 @@ inline_keyboard_main_user_sub_alert_mes = InlineKeyboardMarkup(inline_keyboard=[
     ]])
 
 
-
+def get_10user():
+    us = User.select().order_by(User.date_add).limit(10)
+    return us
 
 
 def get_kb_test():
     keyboard = InlineKeyboardMarkup(row_width=1).add(
         *[
             InlineKeyboardButton(
-            text=f'{user.telegram_id}: {user.name}, {user.date_add.strftime("%d/%m/%Y:%H-%M-%S")}',
+            text=f'{user.telegram_id}: {user.name}, {user.date_add}',
             callback_data=test_del_callback_data.new(key=user.telegram_id))
             for user in get_10user()
         ]

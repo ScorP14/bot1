@@ -4,14 +4,15 @@ import datetime
 from peewee import logger
 
 from data.config import DB_DIR
-from .utility_for_db import get_data_for_db
+from utils.db_api.utility_for_db import get_one_day_data_for_db, get_month_data_for_db
+
 db = SqliteDatabase(DB_DIR)
 
 
 class User(Model):
     telegram_id = IntegerField(unique=True, primary_key=True, verbose_name='ID_telegram')
     name = CharField(max_length=100, null=False, verbose_name='Имя')
-    date_add = DateTimeField(default=datetime.datetime.now().strftime("%d/%m/%Y:%H.%M.%S"), verbose_name='Дата создания')
+    date_add = DateTimeField(default=datetime.datetime.now(), verbose_name='Дата создания')
     sub = BooleanField(default=False, verbose_name='Подсписка')
 
     class Meta:
@@ -40,7 +41,7 @@ class Expenses(Model, ):
     user = ForeignKeyField(User, related_name='expenses')
     category = ForeignKeyField(Categories, related_name='category')
     text_mes = CharField(max_length=255, verbose_name='Сообщение')
-    date_add = DateTimeField(default=datetime.datetime.now().strftime("%d/%m/%Y:%H.%M.%S"), verbose_name='Дата рассхода')
+    date_add = DateTimeField(default=datetime.datetime.now(), verbose_name='Дата рассхода')
     price = FloatField(verbose_name='Цена')
 
     class Meta:
@@ -61,6 +62,7 @@ def select_all_category():
     for i in sel:
         if i.main_category:
             print(i)
+
 
 
 def select_all_user():
@@ -117,7 +119,6 @@ def del_user(id_tg):
     return False
 
 
-
 def asd():
     us = User.get_or_none(468933460)
     cate = Categories.select()
@@ -129,12 +130,18 @@ def asd():
             Expenses.create(user=us, category_id=i, price=float(mes[1]), text_mes=mes)
             break
 
-def select_by_date(year, month):
-    start, end = get_data_for_db(year, month)
-    sel =User.select().where(User.date_add.between(start, end)).order_by(User.date_add)
+
+
+
+def select_one_month_by_date(year, month):
+    start, end = get_month_data_for_db(year, month)
+    sel = User.select().where(User.date_add.between(start, end)).order_by(User.date_add)
     return sel
 
 
-def get_10user():
-    users = User.select().order_by(-User.date_add).limit(10)
-    return users
+def select_one_day_by_date(year, month, day):
+    start, end = get_one_day_data_for_db(year, month, day)
+    print(start, end)
+    sel = User.select().where(User.date_add.between(start, end)).order_by(User.date_add)
+    return sel
+
