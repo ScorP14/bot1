@@ -1,13 +1,10 @@
-import random
-
 from peewee import *
 import datetime
 
 from peewee import logger
 
-from config import DB_DIR
-from db.utility_for_db import get_data_for_db
-
+from data.config import DB_DIR
+from .utility_for_db import get_data_for_db
 db = SqliteDatabase(DB_DIR)
 
 
@@ -83,22 +80,15 @@ def check_for_user(id_tg):
     return False
 
 
-def sub_user_true(id_tg):
+def swap_sub(id_tg):
     user = User.get_or_none(id_tg)
-    if user:
-        user.sub = True
-        user.save()
-        return user
-    return False
-
-
-def sub_user_false(id_tg):
-    user = User.get_or_none(id_tg)
-    if user:
+    if user.sub:
         user.sub = False
-        user.save()
-        return user
-    return False
+        user.save(only=[User.sub])
+        return user.sub
+    user.sub = True
+    user.save(only=[User.sub])
+    return user.sub
 
 
 def check_for_user_sub(id_tg):
@@ -121,8 +111,8 @@ def add_user(id_tg, name, sub=False):
 def del_user(id_tg):
     user = User.get_or_none(id_tg)
     if user:
-        logger.info(f'Пользователь удален: {user} в {datetime.datetime.now()}')
         user.delete_by_id(id_tg)
+        logger.info(f'Пользователь удален: {user} в {datetime.datetime.now()}')
         return True
     return False
 
@@ -143,3 +133,8 @@ def select_by_date(year, month):
     start, end = get_data_for_db(year, month)
     sel =User.select().where(User.date_add.between(start, end)).order_by(User.date_add)
     return sel
+
+
+def get_10user():
+    users = User.select().order_by(-User.date_add).limit(10)
+    return users

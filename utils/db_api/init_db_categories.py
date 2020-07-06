@@ -1,7 +1,5 @@
 import json
 
-from db.main_db import Categories
-
 file = 'categories.json'
 
 with open(file, encoding="utf-8") as f:
