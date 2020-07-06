@@ -7,14 +7,14 @@ from utils.db_api.main_db import add_user, del_user
 from utils.decorators.decorator import not_identification, identification
 
 
-@dp.callback_query_handler(main_callback_data.filter(key=['User']))
-async def callback_vote_action(query: types.CallbackQuery):
-    await query.answer()
-    await bot.edit_message_text(
-        f'Пук из юзера',
-        query.from_user.id, query.message.message_id,
-        reply_markup=inline_keyboard_main_user
-    )
+# @dp.callback_query_handler(main_callback_data.filter(key=['User']))
+# async def callback_vote_action(query: types.CallbackQuery):
+#     await query.answer()
+#     await bot.edit_message_text(
+#         f'Пук из юзера',
+#         query.from_user.id, query.message.message_id,
+#         reply_markup=inline_keyboard_main_user
+#     )
 
 
 @dp.callback_query_handler(main_user_callback_data.filter(key='Add_user'))
