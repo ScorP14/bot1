@@ -1,7 +1,10 @@
 from aiogram import types
 from aiogram.dispatcher.filters import Command
 
-from keyboards.kb import get_kb_test, test_callback_data, test_mk, inline_keyboard_main
+from keyboards.callback_data.callback import test_callback_data
+from keyboards.default_button.test_menu import test_mk
+from keyboards.in_line_keyboard.menu import inline_keyboard_main
+from keyboards.in_line_keyboard.menu_user import get_kb_test
 from main import dp, bot
 
 

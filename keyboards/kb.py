@@ -1,6 +1,5 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
-from aiogram.utils.callback_data import CallbackData
 
 from utils.db_api.main_db import User, get_10user
 
@@ -19,82 +18,6 @@ def get_keyboard(id_tg):
     return kb
 
 
-test_mk = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, keyboard=[
-    [
-        KeyboardButton(text='/add'),
-        KeyboardButton(text='/del'),
-        KeyboardButton(text='/sub'),
-        KeyboardButton(text='/check'),
-    ],
-    [
-        KeyboardButton(text='/cancel')
-    ]
-])
-
-'''Callback_data------------------------'''
-main_callback_data = CallbackData('main_menu', 'key')
-main_user_callback_data = CallbackData('main_menu_user', 'key')
-main_category_callback_data = CallbackData('main_menu_category', 'key')
-
-inline_keyboard_main = InlineKeyboardMarkup(inline_keyboard=[
-    [
-        InlineKeyboardButton(text='Пользователь',
-                             callback_data=main_callback_data.new(key='User')),
-        InlineKeyboardButton(text='Категории', callback_data='main_menu:Category'),
-    ],
-    [
-        InlineKeyboardButton(text='Выход', callback_data='Cancel')
-    ]
-])
-
-inline_keyboard_main_user = InlineKeyboardMarkup(inline_keyboard=[
-    [
-        InlineKeyboardButton(text='Стать пользователем?)', callback_data=main_user_callback_data.new(key='Add')),
-        InlineKeyboardButton(text='Перестать быть польз.:(', callback_data='main_menu_user:Del'),
-    ],
-    [
-        InlineKeyboardButton(text='Подписаться', callback_data=main_user_callback_data.new(key='Sub')),
-        InlineKeyboardButton(text='Отписаться', callback_data='main_menu_user:Del_Sub'),
-    ]
-    ,
-    [
-        InlineKeyboardButton(text='Выход', callback_data='Cancel')
-    ]
-])
-
-
-inline_keyboard_main_category = InlineKeyboardMarkup(inline_keyboard=[
-    [
-        InlineKeyboardButton(text='Все расходы', callback_data=main_user_callback_data.new(key='Add')),
-        InlineKeyboardButton(text='Перестать быть польз.:(', callback_data='main_menu_user:Del'),
-        InlineKeyboardButton(text='Последние 5 расходов', callback_data='main_menu_user:Del'),
-    ],
-    [
-        InlineKeyboardButton(text='Расход за день', callback_data=main_user_callback_data.new(key='Sub')),
-        InlineKeyboardButton(text='Расход за неделю', callback_data='main_menu_user:Del_Sub'),
-        InlineKeyboardButton(text='Расход за месяц', callback_data='main_menu_user:Del_Sub'),
-        InlineKeyboardButton(text='Расход за год', callback_data='main_menu_user:Del_Sub'),
-    ]
-    ,
-    [
-        InlineKeyboardButton(text='Выход', callback_data='Cancel')
-    ]
-])
-
-test_callback_data = CallbackData('test', 'key')
-test_del_callback_data = CallbackData('del', 'key')
-
-
-def get_kb_test():
-    keyboard = InlineKeyboardMarkup(row_width=1).add(
-        *[
-            InlineKeyboardButton(
-            text=f'{user.telegram_id}: {user.name}, {user.date_add.strftime("%d/%m/%Y:%H-%M-%S")}',
-            callback_data=test_del_callback_data.new(key=user.telegram_id))
-            for user in get_10user()
-        ]
-    )
-    return keyboard
 
 '''
 test_cb = CallbackData('post', 'action')
