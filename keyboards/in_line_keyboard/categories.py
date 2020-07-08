@@ -1,23 +1,13 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from keyboards.callback_data.callback import main_user_callback_data
+from keyboards.callback_data.callback import main_category_callback_data
+from utils.db_api.main_db import Categories
 
 
-inline_keyboard_main_category = InlineKeyboardMarkup(inline_keyboard=[
-    [
-        InlineKeyboardButton(text='Все расходы', callback_data=main_user_callback_data.new(key='Add')),
-        InlineKeyboardButton(text='Последние 5 расходов', callback_data='main_menu_user:Del'),
-    ],
-    [
-        InlineKeyboardButton(text='Расход за день', callback_data=main_user_callback_data.new(key='Sub')),
-        InlineKeyboardButton(text='Расход за неделю', callback_data='main_menu_user:Del_Sub')
-    ],
-    [
-        InlineKeyboardButton(text='Расход за месяц', callback_data='main_menu_user:Del_Sub'),
-        InlineKeyboardButton(text='Расход за год', callback_data='main_menu_user:Del_Sub'),
-    ]
-    ,
-    [
-        InlineKeyboardButton(text='Выход', callback_data='Cancel')
-    ]
-])
+def get_kb_categories():
+    categ = Categories.select()
+    keyboard = InlineKeyboardMarkup(row_width=2)
+    for i in categ:
+        print(i.category)
+        keyboard.insert(InlineKeyboardButton(text=i.category, callback_data=main_category_callback_data.new(key=i.category)))
+    return keyboard

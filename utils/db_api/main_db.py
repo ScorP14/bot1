@@ -4,7 +4,7 @@ import datetime
 from peewee import logger
 
 from data.config import DB_DIR
-from utils.db_api.utility_for_db import get_one_day_data_for_db, get_month_data_for_db
+from utils.db_api.utility_for_db import get_one_day_data_for_db, get_month_data_for_db, parse_text_for_expenses
 
 db = SqliteDatabase(DB_DIR)
 
@@ -36,7 +36,7 @@ class Categories(Model):
 
 
 
-class Expenses(Model, ):
+class Expenses(Model):
     id = PrimaryKeyField(null=False)
     user = ForeignKeyField(User, related_name='expenses')
     category = ForeignKeyField(Categories, related_name='category')
@@ -46,9 +46,10 @@ class Expenses(Model, ):
 
     class Meta:
         database = db
+        order_be = ('date_add',)
 
     def __str__(self):
-        return f'{self.text_mes} - {self.date_add}: {self.price}'
+        return f'{self.id}-{self.user.telegram_id}: {self.category}_{self.price}_{self.date_add}_{self.text_mes}'
 
 
 
@@ -119,16 +120,47 @@ def del_user(id_tg):
     return False
 
 
-def asd():
-    us = User.get_or_none(468933460)
+def add_expenses(id_tg, mes):
+    user = User.get_or_none(id_tg)
     cate = Categories.select()
-    mes = 'еда 320560'.lower()
-    mes = mes.split()
+    if not parse_text_for_expenses(mes):
+        return False
+    category, price = parse_text_for_expenses(mes)
     for i in cate:
         alias = i.aliases.lower().split()
-        if mes[0] in alias:
-            Expenses.create(user=us, category_id=i, price=float(mes[1]), text_mes=mes)
+        if category in alias:
+            Expenses.create(user=user, category_id=i, price=price, text_mes=mes)
             break
+
+
+def test():
+    user = get_user(956608146)
+    ex = Expenses.select().where(Expenses.user == user)
+    a = []
+    for i in ex:
+        a.append(f'{i.user.telegram_id}: {i.category.category}(Важные - {i.category.main_category}). Текст сообщения - {i.text_mes}')
+    return a
+
+  # id = PrimaryKeyField(null=False)
+  #   user = ForeignKeyField(User, related_name='expenses')
+  #   category = ForeignKeyField(Categories, related_name='category')
+  #   text_mes = CharField(max_length=255, verbose_name='Сообщение')
+  #   date_add = DateTimeField(default=datetime.datetime.now(), verbose_name='Дата рассхода')
+  #   price = FloatField(verbose_name='Цена')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

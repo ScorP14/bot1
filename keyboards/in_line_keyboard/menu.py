@@ -10,6 +10,10 @@ inline_keyboard_main = InlineKeyboardMarkup(inline_keyboard=[
         InlineKeyboardButton(text='Категории', callback_data='main_menu:Category'),
     ],
     [
+        InlineKeyboardButton(text='Расходы',
+                             callback_data=main_callback_data.new(key='Expenses'))
+    ],
+    [
         InlineKeyboardButton(text='Выход', callback_data='Cancel')
     ]
 ])
