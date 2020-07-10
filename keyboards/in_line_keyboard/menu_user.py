@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from keyboards.callback_data.callback import main_user_callback_data, test_del_callback_data, main_user_sub_alert_mes
-from utils.db_api.main_db import User
+from utils.db_api.models.user import User
 
 inline_keyboard_main_user = InlineKeyboardMarkup(inline_keyboard=[
     [

@@ -3,7 +3,7 @@ from aiogram import types
 from keyboards.callback_data.callback import main_callback_data, main_user_callback_data
 from keyboards.in_line_keyboard.menu_user import inline_keyboard_main_user
 from main import dp, bot
-from utils.db_api.main_db import add_user, del_user
+from utils.db_api.models.user import User
 from utils.decorators.decorator import not_identification, identification
 
 
@@ -11,7 +11,10 @@ from utils.decorators.decorator import not_identification, identification
 async def callback_vote_action(query: types.CallbackQuery):
     await query.answer()
     await bot.edit_message_text(
-        f'Здравсвуй {query.from_user.full_name}',
+        f"""Здравствуй - {query.from_user.full_name}
+Подписка - {'Есть' if User.check_for_user_sub(query.from_user.id) else 'Нету'}
+Привествую)
+""",
         query.from_user.id, query.message.message_id,
         reply_markup=inline_keyboard_main_user
     )
@@ -20,7 +23,7 @@ async def callback_vote_action(query: types.CallbackQuery):
 @dp.callback_query_handler(main_user_callback_data.filter(key='Add_user'))
 @not_identification
 async def callback_vote_action(query: types.CallbackQuery):
-    users = add_user(query.from_user.id, query.from_user.full_name)
+    users = User.add_user(query.from_user.id, query.from_user.full_name)
     if users[1]:
         text = f'Пользователь:{query.from_user.id}-{query.from_user.full_name} создан'
         await query.answer(text)
@@ -37,7 +40,7 @@ async def callback_vote_action(query: types.CallbackQuery):
 @identification
 async def callback_vote_action(query: types.CallbackQuery):
     await query.answer()
-    users = del_user(query.from_user.id)
+    users = User.del_user(query.from_user.id)
     if users:
         return await bot.edit_message_text('Пользователь удален',
                                            query.from_user.id, query.message.message_id,
@@ -52,3 +55,4 @@ async def echo(query: types.CallbackQuery):
         query.from_user.id,
         query.message.message_id
     )
+

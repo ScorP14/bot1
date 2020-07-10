@@ -1,7 +1,34 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from keyboards.callback_data.callback import main_expenses_callback_data, main_category_callback_data
-from utils.db_api.main_db import get_user, Expenses
+from utils.db_api.models.expenses import Expenses
+from utils.db_api.models.user import User
+
+in_keyboard_main_expenses = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text='Добавить расход', callback_data=main_expenses_callback_data.new(id='Add_exp')),
+        InlineKeyboardButton(text='Удалить', callback_data=main_expenses_callback_data.new(id='Del_exp')),
+    ],
+    [
+        InlineKeyboardButton(text='<<< Назад', callback_data=main_expenses_callback_data.new(id='Back_exp')),
+    ]
+    ,
+    [
+        InlineKeyboardButton(text='Выход', callback_data='Cancel')
+    ]
+])
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 inline_keyboard_main_category = InlineKeyboardMarkup(inline_keyboard=[
@@ -25,7 +52,7 @@ inline_keyboard_main_category = InlineKeyboardMarkup(inline_keyboard=[
 
 
 def get_keyboard_expense():
-    user = get_user(468933460)
+    user = User.get_user(468933460)
     expens = Expenses.select().where(Expenses.user == user)
     keyIN = InlineKeyboardMarkup(row_width=2)
     for i in expens:
