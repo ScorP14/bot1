@@ -59,4 +59,3 @@ def get_keyboard_expense():
                                        callback_data=main_expenses_callback_data.new(id=i.id)))
 
     return keyIN
-

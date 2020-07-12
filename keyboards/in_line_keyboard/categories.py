@@ -21,6 +21,3 @@ def get_one_categ(categor: str):
         return categ
     except Categories.DoesNotExist:
         return False
-
-
-
