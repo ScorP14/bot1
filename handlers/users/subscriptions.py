@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.types import ReplyKeyboardRemove
 from handlers.users.user import menu_user
 from keyboards.callback_data.callback import cdb_menu_user, cdb_user_sub_alert_mes, cdb_menu_user_sub
-from keyboards.in_line_keyboard.menu_user import in_kb_sub_alert_mes, in_kb_main_user, in_kb_user_sub
+from keyboards.in_line_keyboard.menu_user import in_kb_sub_alert_mes, in_kb_user_sub
 
 from setup import dp, bot
 from utils.db_api.models.func_model_user import swap_sub, check_for_user_sub
@@ -20,8 +20,6 @@ async def sub_menu(query: types.CallbackQuery):
                                        if check_for_user_sub(query.from_user.id) else 'Вы не подписаны :(',
                                        query.from_user.id, query.message.message_id,
                                        reply_markup=in_kb_user_sub)
-
-
 
 
 @dp.callback_query_handler(cdb_menu_user_sub.filter(key=['User_sub_true']))
