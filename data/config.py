@@ -13,4 +13,3 @@ DB_DIR = f'{BASE_DIR}{DB}'
 
 
 db = SqliteDatabase(DB_DIR)
-4

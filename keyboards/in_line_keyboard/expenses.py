@@ -1,15 +1,15 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from keyboards.callback_data.callback import main_expenses_callback_data, main_category_callback_data
+from keyboards.callback_data.callback import cdb_menu_expenses, cdb_menu_category
 from utils.db_api.models.models import User, Expenses
 
 in_keyboard_main_expenses = InlineKeyboardMarkup(inline_keyboard=[
     [
-        InlineKeyboardButton(text='Добавить расход', callback_data=main_expenses_callback_data.new(id='Add_exp')),
-        InlineKeyboardButton(text='Удалить', callback_data=main_expenses_callback_data.new(id='Del_exp')),
+        InlineKeyboardButton(text='Добавить расход', callback_data=cdb_menu_expenses.new(key='Add_exp')),
+        InlineKeyboardButton(text='Удалить', callback_data=cdb_menu_expenses.new(key='Del_exp')),
     ],
     [
-        InlineKeyboardButton(text='<<< Назад', callback_data=main_expenses_callback_data.new(id='Back_exp')),
+        InlineKeyboardButton(text='<<< Назад', callback_data=cdb_menu_expenses.new(key='Back_exp')),
     ]
     ,
     [
@@ -32,16 +32,16 @@ in_keyboard_main_expenses = InlineKeyboardMarkup(inline_keyboard=[
 
 inline_keyboard_main_category = InlineKeyboardMarkup(inline_keyboard=[
     [
-        InlineKeyboardButton(text='Все расходы', callback_data=main_category_callback_data.new(key='All_exp')),
-        InlineKeyboardButton(text='Последние 5 расходов', callback_data=main_category_callback_data.new(key='Last_5_exp')),
+        InlineKeyboardButton(text='Все расходы', callback_data=cdb_menu_category.new(key='All_exp')),
+        InlineKeyboardButton(text='Последние 5 расходов', callback_data=cdb_menu_category.new(key='Last_5_exp')),
     ],
     [
-        InlineKeyboardButton(text='Расход за день', callback_data=main_category_callback_data.new(key='Day_exp')),
-        InlineKeyboardButton(text='Расход за неделю', callback_data=main_category_callback_data.new(key='Medely_exp'))
+        InlineKeyboardButton(text='Расход за день', callback_data=cdb_menu_category.new(key='Day_exp')),
+        InlineKeyboardButton(text='Расход за неделю', callback_data=cdb_menu_category.new(key='Medely_exp'))
     ],
     [
-        InlineKeyboardButton(text='Расход за месяц', callback_data=main_category_callback_data.new(key='Monz_exp')),
-        InlineKeyboardButton(text='Расход за год', callback_data=main_category_callback_data.new(key='Year_exp')),
+        InlineKeyboardButton(text='Расход за месяц', callback_data=cdb_menu_category.new(key='Monz_exp')),
+        InlineKeyboardButton(text='Расход за год', callback_data=cdb_menu_category.new(key='Year_exp')),
     ]
     ,
     [
@@ -56,7 +56,7 @@ def get_keyboard_expense():
     keyIN = InlineKeyboardMarkup(row_width=2)
     for i in expens:
         keyIN.add(InlineKeyboardButton(text=f'{i.id}: {i.category.category} - {i.text_mes}',
-                                       callback_data=main_expenses_callback_data.new(id=i.id)))
+                                       callback_data=cdb_menu_expenses.new(id=i.id)))
 
     return keyIN
 
