@@ -3,7 +3,7 @@ from aiogram.dispatcher.filters import Command
 
 from keyboards.default_button.test_menu import test_mk
 from keyboards.in_line_keyboard.menu import inline_keyboard_main
-from main import dp
+from setup import dp
 
 
 @dp.message_handler(Command('start'))

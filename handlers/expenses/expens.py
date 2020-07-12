@@ -5,7 +5,7 @@ from aiogram.types import ReplyKeyboardRemove
 from keyboards.callback_data.callback import main_expenses_callback_data, main_callback_data
 from keyboards.default_button.expense import rasxod
 from keyboards.in_line_keyboard.expenses import inline_keyboard_main_category, in_keyboard_main_expenses
-from main import dp, bot
+from setup import dp, bot
 from states.state import StateAddExpenses
 from utils.db_api.utility_for_db import parse_text_for_expenses
 

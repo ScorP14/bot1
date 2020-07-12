@@ -1,11 +1,12 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from keyboards.callback_data.callback import main_category_callback_data
-from utils.db_api.models.categories import Categories
+from utils.db_api.models.func_model_categories import get_list_categories
+from utils.db_api.models.models import Categories
 
 
 def get_kb_categories():
-    cate = Categories.get_list_categories()
+    cate = get_list_categories()
     keyboard = InlineKeyboardMarkup(row_width=3)
     for i in cate:
         keyboard.insert(InlineKeyboardButton(text=i,

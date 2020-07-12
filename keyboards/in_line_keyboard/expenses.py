@@ -1,8 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from keyboards.callback_data.callback import main_expenses_callback_data, main_category_callback_data
-from utils.db_api.models.expenses import Expenses
-from utils.db_api.models.user import User
+from utils.db_api.models.models import User, Expenses
 
 in_keyboard_main_expenses = InlineKeyboardMarkup(inline_keyboard=[
     [

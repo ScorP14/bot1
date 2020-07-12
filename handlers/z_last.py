@@ -6,7 +6,7 @@ from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import ParseMode
 
-from main import dp, bot
+from setup import dp, bot
 import aiogram.utils.markdown as md
 
 
@@ -128,10 +128,10 @@ async def process_gender(message: types.Message, state: FSMContext):
 
 
 
-@dp.message_handler()
-async def check(mes: types.Message):
-    '''Ехо'''
-    await mes.answer('echp last -' + mes.text)
+# @dp.message_handler()
+# async def check(mes: types.Message):
+#     '''Ехо'''
+#     await mes.answer('echp last -' + mes.text)
 
 
 
