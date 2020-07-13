@@ -6,18 +6,19 @@ from utils.db_api.models.models import Categories
 
 
 def get_kb_categories():
-    cate = get_list_categories()
+    list_category = get_list_categories()
     keyboard = InlineKeyboardMarkup(row_width=3)
-    for i in cate:
+    for i in list_category:
         keyboard.insert(InlineKeyboardButton(text=i,
                                              callback_data=cdb_menu_category.new(key=i)))
     keyboard.add(InlineKeyboardButton(text='Назад', callback_data='test'))
+    keyboard.add(InlineKeyboardButton(text='Выход', callback_data='test'))
     return keyboard
 
 
-def get_one_categ(categor: str):
+def get_one_category(categor: str):
     try:
-        categ = Categories.get_by_id(categor)
-        return categ
+        category = Categories.get_by_id(categor)
+        return category
     except Categories.DoesNotExist:
         return False

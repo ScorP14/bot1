@@ -2,8 +2,8 @@ from utils.db_api.models.models import Categories
 
 
 def get_list_categories() -> list:
-    cat = Categories.select()
-    list_categories = [i.category for i in cat]
+    all_category = Categories.select()
+    list_categories = [i.category for i in all_category]
     return list_categories
 
 

@@ -9,6 +9,8 @@ cdb_user_sub_alert_mes = CallbackData('cdb_user_sub_alert_mes', 'answer')
 
 # Меню категорий
 cdb_menu_category = CallbackData('cdb_menu_category', 'key')
+
+
 # Меню Расходов
 cdb_menu_expenses = CallbackData('cdb_menu_expenses', 'key')
 

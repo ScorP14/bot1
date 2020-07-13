@@ -31,18 +31,3 @@ in_kb_sub_alert_mes = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Отмена', callback_data=cdb_user_sub_alert_mes.new(answer='Cancel'))]])
 
 
-def get_10user():
-    us = User.select().order_by(User.date_add).limit(10)
-    return us
-
-
-def get_kb_test():
-    keyboard = InlineKeyboardMarkup(row_width=1).add(
-        *[
-            InlineKeyboardButton(
-            text=f'{user.telegram_id}: {user.name}, {user.date_add}',
-            callback_data=test_del_callback_data.new(key=user.telegram_id))
-            for user in get_10user()
-        ]
-    )
-    return keyboard

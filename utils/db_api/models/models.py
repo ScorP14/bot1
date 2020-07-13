@@ -1,70 +1,101 @@
 import datetime
+import random
 from math import ceil
-
-from peewee import Model, IntegerField, CharField, DateTimeField, BooleanField, DoesNotExist, PrimaryKeyField, \
-    ForeignKeyField, FloatField, TextField
+from peewee import *
 
 from data.config import db
-from setup import logger
-from utils.db_api.utility_for_db import get_one_day_data_for_db, parse_text_for_expenses
 
 
-class User(Model):
-    telegram_id = IntegerField(unique=True, primary_key=True, verbose_name='ID_telegram')
-    name = CharField(max_length=100, null=False, verbose_name='Имя')
-    date_add = DateTimeField(default=datetime.datetime.now(), verbose_name='Дата создания')
+class BaseModel(Model):
+    class Meta:
+        database = db
+
+
+class Users(BaseModel):
+    telegram_id = IntegerField(primary_key=True, unique=True, verbose_name='ID')
+    name = CharField(max_length=255, verbose_name='Имя',null=True)
+    date_add = DateTimeField(default=datetime.datetime.now(), verbose_name='Дата')
     sub = BooleanField(default=False, verbose_name='Подсписка')
 
     class Meta:
-        database = db
         order_be = ('date_add',)
 
-    def __str__(self):
-        return f'{self.telegram_id}: {self.name} {self.sub}, {self.date_add}'
+
+class Categories(BaseModel):
+    category = CharField(primary_key=True, unique=True, verbose_name='Категория')
 
 
-class Categories(Model):
-    category = CharField(max_length=255, primary_key=True, unique=True, verbose_name='Категорая')
-    main_category = BooleanField(verbose_name='Основной расход?', default=False)
-    aliases = TextField(verbose_name='Ключи')
-
-    class Meta:
-        database = db
-        order_be = ('category',)
-
-    def __str__(self):
-        return f'{self.category} - {self.main_category}: {self.aliases}'
+class ViewExpenses(BaseModel):
+    category = ForeignKeyField(Categories, related_name='view_expenses')
+    name_expense = CharField(max_length=255, verbose_name='Расход', null=False, unique=True)
 
 
-class Expenses(Model):
-    id = PrimaryKeyField(null=False)
-    user = ForeignKeyField(User, related_name='expenses')
-    category = ForeignKeyField(Categories, related_name='category')
-    text_mes = CharField(max_length=255, verbose_name='Сообщение')
-    date_add = DateTimeField(default=datetime.datetime.now(), verbose_name='Дата рассхода')
-    price = FloatField(verbose_name='Цена')
+class Expenses(BaseModel):
+    user = ForeignKeyField(Users, related_name='expenses', verbose_name='Пользователь')
+    view_expense = ForeignKeyField(ViewExpenses, related_name='expenses', verbose_name='Вид расхода')
+    main_expense = BooleanField(default=False, verbose_name='Основной расход?')
+    date_add = DateTimeField(default=datetime.datetime.now(), verbose_name='Дата расхода')
+    price = FloatField(verbose_name='Цена', null=False)
 
     class Meta:
-        database = db
         order_be = ('date_add',)
 
-    def __str__(self):
-        return f'{self.id}-{self.user.telegram_id}: {self.category}_{self.price}_{self.date_add}_{self.text_mes}'
 
 
+def add_exp():
+    user = Users.get_by_id(7594222)
+    view = random.choice(ViewExpenses.select())
+    main = random.choice([True, False])
+    sss = random.randint(10, 2000)
+    Expenses.create(user=user, view_expense=view, main_expense=main, price=sss)
 
 
-def test():
-    """Считает среднее за день, неделю, месяц, год"""
-    start, end = get_one_day_data_for_db(2020, 8, 10)
-    print(start, '-----------', end)
-    sel = Expenses\
-        .select(Expenses.price, Expenses.date_add)\
-        .where(Expenses.date_add.between(start, end))\
-        .order_by(Expenses.date_add)
-    temp = 0.0
-    for i in sel:
-        temp += i.price
-        print(i.date_add, i.price)
-    print('Всреднем... вы пробухали -', temp/len(sel))
-    print(temp, '=====', temp/len(sel))
+# -----------------Шпаргалки --------------------------------------------------------
+# for i in Expenses.select():
+#     print(f'Main - {i.main_expense}, \n'
+#           f'Data - {i.date_add},\n'
+#           f'рублей - {i.price}\n'
+#           f'{i.view_expense.category}-{i.view_expense.name_expense},\n\n')
+
+# def asd():
+#
+#     cat = Categories.select().where(Categories.category == 'Продукты')
+#     vie = ViewExpenses.select().where(ViewExpenses.category == cat)
+#     for i in vie:
+#         print(i.name_expense)
+#
+#
+#
+#     for i in Expenses.select().where(Expenses.view_expense << vie):
+#         print(f'рублей - {i.price}\n'
+#               f'{i.view_expense.category}-{i.view_expense.name_expense}\n')
+#
+# asd()
+'''
+448236
+1269236
+2156161
+2810235
+3819591
+4418592
+4736411
+7594222
+7676783
+8682489
+8710810
+'''
+
+"""
+==	x equals y
+<	x is less than y
+<=	x is less than or equal to y
+>	x is greater than y
+>=	x is greater than or equal to y
+!=	x is not equal to y
+<<	x IN y, where y is a list or query
+>>	x IS y, where y is None/NULL
+%	x LIKE y where y may contain wildcards
+**	x ILIKE y where y may contain wildcards
+^	x XOR y
+~	Unary negation (e.g., NOT x)
+"""

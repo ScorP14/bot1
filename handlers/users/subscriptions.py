@@ -12,10 +12,6 @@ from utils.decorators.decorator import identification, not_subscriber, subscribe
 
 @dp.callback_query_handler(cdb_menu_user.filter(key=['Sub_user']))
 async def sub_menu(query: types.CallbackQuery):
-    """
-    Проверяет декораторами есть ли пользователь в базе,
-    подписан ли он, если НЕТ, вызывает клавиатуру с вопросом на добавление - Да-Нет-Выхолд
-    """
     return await bot.edit_message_text('Вы подписаны :)'
                                        if check_for_user_sub(query.from_user.id) else 'Вы не подписаны :(',
                                        query.from_user.id, query.message.message_id,
