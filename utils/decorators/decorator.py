@@ -1,7 +1,7 @@
 from aiogram import types
 
 from utils.db_api.models.func_model_user import get_user
-from utils.db_api.models.models import User
+from utils.db_api.models.models import Users
 
 
 def identification(func):
@@ -26,7 +26,7 @@ def not_identification(func):
 
 def subscriber(func):
     async def decor(mes: types.Message):
-        user = User.get(User.telegram_id == mes.from_user.id)
+        user = Users.get(Users.telegram_id == mes.from_user.id)
         if user.sub:
             await func(mes)
         else:
@@ -36,7 +36,7 @@ def subscriber(func):
 
 def not_subscriber(func):
     async def decor(mes: types.Message):
-        user = User.get(User.telegram_id == mes.from_user.id)
+        user = Users.get(Users.telegram_id == mes.from_user.id)
         if not user.sub:
             await func(mes)
         else:

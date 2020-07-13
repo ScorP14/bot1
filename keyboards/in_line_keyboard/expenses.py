@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from keyboards.callback_data.callback import cdb_menu_expenses, cdb_menu_category
-from utils.db_api.models.models import User, Expenses
+from utils.db_api.models.models import Users, Expenses
 
 in_keyboard_main_expenses = InlineKeyboardMarkup(inline_keyboard=[
     [
@@ -51,7 +51,7 @@ inline_keyboard_main_category = InlineKeyboardMarkup(inline_keyboard=[
 
 
 def get_keyboard_expense():
-    user = User.get_user(468933460)
+    user = Users.get_user(468933460)
     expens = Expenses.select().where(Expenses.user == user)
     keyIN = InlineKeyboardMarkup(row_width=2)
     for i in expens:

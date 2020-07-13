@@ -11,14 +11,14 @@ def get_kb_categories():
     for i in list_category:
         keyboard.insert(InlineKeyboardButton(text=i,
                                              callback_data=cdb_menu_category.new(key=i)))
-    keyboard.add(InlineKeyboardButton(text='Назад', callback_data='test'))
-    keyboard.add(InlineKeyboardButton(text='Выход', callback_data='test'))
+    keyboard.add(InlineKeyboardButton(text='Назад', callback_data=cdb_menu_category.new(key='Back')))
+    keyboard.add(InlineKeyboardButton(text='Выход', callback_data=cdb_menu_category.new(key='Exit')))
     return keyboard
 
 
-def get_one_category(categor: str):
+def get_one_category(category: str):
     try:
-        category = Categories.get_by_id(categor)
-        return category
+        item = Categories.get_by_id(category)
+        return item
     except Categories.DoesNotExist:
         return False

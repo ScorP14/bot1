@@ -1,19 +1,31 @@
-from utils.db_api.models.models import User, Categories, Expenses
+from utils.db_api.models.func_model_categories import get_category_from_str
+from utils.db_api.models.func_model_user import get_user
+from utils.db_api.models.func_model_view_expenses import get_name_expense_from_category
+from utils.db_api.models.models import Users, Categories, Expenses, ViewExpenses
 from utils.db_api.utility_for_db import parse_text_for_expenses, get_one_day_data_for_db
 
 
-def add_expenses(id_tg, mes):
-    user = User.get_or_none(id_tg)
-    cate = Categories.select()
-    if not parse_text_for_expenses(mes):
+def add_expenses(id_tg: int, category: str, message: str, price: float, main: bool = False):
+    user = get_user(id_tg)
+    categ = get_category_from_str(category)
+    view = get_name_expense_from_category(categ, message)
+    if not user or not categ or not view:
         return False
-    category, price = parse_text_for_expenses(mes)
-    for i in cate:
-        alias = i.aliases.lower().split()
-        if category in alias:
-            Expenses.create(user=user, category_id=i, price=price, text_mes=mes)
-            break
+    print(user.name, categ.category, view)
+    Expenses.create(user=user, view_expense=view, price=price, main_expense=main)
 
+
+for i in Expenses.select().where(Expenses.user == 468933460):
+    print(f'''User:{i.user.name}, 
+Расход: {i.view_expense.category}-{i.view_expense.name_expense} 
+Main - {i.main_expense}, 
+Data - {i.date_add}, 
+Price - {i.price}
+{i}''')
+
+
+
+#add_expenses(468933460, 'ПродуКты', 'сыр', 300.50, True)
 
 
 def select_all():

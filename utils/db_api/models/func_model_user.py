@@ -7,8 +7,9 @@ from setup import logger
 from utils.db_api.models.models import Users
 
 
-def get_user(id_tg: int):
+def get_user(id_tg: int) -> Users or None:
     return Users.get_or_none(id_tg)
+
 
 
 def swap_sub(id_tg):

@@ -1,9 +1,10 @@
 from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from setup import dp, bot
-from utils.db_api.models.models import User, Categories
+from utils.db_api.models.models import Categories
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
+
 
 kb = InlineKeyboardMarkup(row_width=2, inline_keyboard=
 [
@@ -20,6 +21,8 @@ kb = InlineKeyboardMarkup(row_width=2, inline_keyboard=
         InlineKeyboardButton(text='Exit', callback_data='Exit')
     ]
 ])
+
+
 class QWE(StatesGroup):
     page = 1
     St1 = State()
@@ -44,8 +47,8 @@ async def cmd_s123tart(query: types.CallbackQuery, state: FSMContext):
     if query.data == 'Exit':
         await state.finish()
         return await bot.edit_message_text(chat_id=query.message.chat.id,
-                                message_id=query.message.message_id,
-                                text='Выход')
+                                           message_id=query.message.message_id,
+                                           text='Выход')
     us = Categories.select().limit(10).paginate(QWE.page, 3)
 
     text = [str(i) for i in us]

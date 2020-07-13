@@ -1,9 +1,9 @@
 import datetime
 import random
-from math import ceil
 from peewee import *
 
 from data.config import db
+from utils.db_api.utility_for_db import get_one_day_data_for_db
 
 
 class BaseModel(Model):
@@ -13,7 +13,7 @@ class BaseModel(Model):
 
 class Users(BaseModel):
     telegram_id = IntegerField(primary_key=True, unique=True, verbose_name='ID')
-    name = CharField(max_length=255, verbose_name='Имя',null=True)
+    name = CharField(max_length=255, verbose_name='Имя', null=True)
     date_add = DateTimeField(default=datetime.datetime.now(), verbose_name='Дата')
     sub = BooleanField(default=False, verbose_name='Подсписка')
 
@@ -27,7 +27,7 @@ class Categories(BaseModel):
 
 class ViewExpenses(BaseModel):
     category = ForeignKeyField(Categories, related_name='view_expenses')
-    name_expense = CharField(max_length=255, verbose_name='Расход', null=False, unique=True)
+    name_expense = CharField(primary_key=True, max_length=255, verbose_name='Расход', null=False, unique=True)
 
 
 class Expenses(BaseModel):
@@ -41,13 +41,28 @@ class Expenses(BaseModel):
         order_be = ('date_add',)
 
 
-
 def add_exp():
     user = Users.get_by_id(7594222)
     view = random.choice(ViewExpenses.select())
     main = random.choice([True, False])
     sss = random.randint(10, 2000)
     Expenses.create(user=user, view_expense=view, main_expense=main, price=sss)
+
+
+def test():
+    """Считает среднее за день, неделю, месяц, год"""
+    start, end = get_one_day_data_for_db(2020, 8, 10)
+    print(start, '-----------', end)
+    sel = Expenses\
+        .select(Expenses.price, Expenses.date_add)\
+        .where(Expenses.date_add.between(start, end))\
+        .order_by(Expenses.date_add)
+    temp = 0.0
+    for i in sel:
+        temp += i.price
+        print(i.date_add, i.price)
+    print('Всреднем... вы пробухали -', temp/len(sel))
+    print(temp, '=====', temp/len(sel))
 
 
 # -----------------Шпаргалки --------------------------------------------------------
