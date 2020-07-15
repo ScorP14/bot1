@@ -8,7 +8,7 @@ in_kb_main_user = InlineKeyboardMarkup(inline_keyboard=[
      InlineKeyboardButton(text='Перестать быть польз.:(', callback_data='cdb_menu_user:Del_user')],
 
     [InlineKeyboardButton(text='Подписка', callback_data=cdb_menu_user.new(key='Sub_user')),
-     InlineKeyboardButton(text='Назад', callback_data=cdb_menu_user.new(key='Back'))],
+     InlineKeyboardButton(text='<<< Назад', callback_data=cdb_menu_user.new(key='Back'))],
 
     [InlineKeyboardButton(text='Выход', callback_data=cdb_menu_user.new(key='Exit'))]
 ])

@@ -1,31 +1,27 @@
 from utils.db_api.models.func_model_categories import get_category_from_str
 from utils.db_api.models.func_model_user import get_user
-from utils.db_api.models.func_model_view_expenses import get_name_expense_from_category
-from utils.db_api.models.models import Users, Categories, Expenses, ViewExpenses
-from utils.db_api.utility_for_db import parse_text_for_expenses, get_one_day_data_for_db
+from utils.db_api.models.func_model_view_expenses import get_name_expense_from_category, search_name_expenses_in_db
+from utils.db_api.models.models import Expenses, Categories, ViewExpenses
+from utils.db_api.utility_for_db import get_one_day_data_for_db
 
 
-def add_expenses(id_tg: int, category: str, message: str, price: float, main: bool = False):
+def add_expenses(id_tg: int, name_exp: ViewExpenses, price: float, main: bool = False):
     user = get_user(id_tg)
-    categ = get_category_from_str(category)
-    view = get_name_expense_from_category(categ, message)
-    if not user or not categ or not view:
+    view_ex = search_name_expenses_in_db(name_exp)
+    if not user:
         return False
-    print(user.name, categ.category, view)
-    Expenses.create(user=user, view_expense=view, price=price, main_expense=main)
+    Expenses.create(user=user, view_expense=view_ex.name_expense, price=price, main_expense=main)
+    return True
 
 
-for i in Expenses.select().where(Expenses.user == 468933460):
-    print(f'''User:{i.user.name}, 
-Расход: {i.view_expense.category}-{i.view_expense.name_expense} 
-Main - {i.main_expense}, 
-Data - {i.date_add}, 
-Price - {i.price}
-{i}''')
+def view_expenses(id_tg: int, main=False):
+    user = get_user(id_tg)
+    epens = Expenses.select().where(Expenses.user == user)
+    if main:
+        epens = Expenses.select().where((Expenses.user == user)& (Expenses.main_expense >> main))
+    for i in epens:
+        yield i
 
-
-
-#add_expenses(468933460, 'ПродуКты', 'сыр', 300.50, True)
 
 
 def select_all():

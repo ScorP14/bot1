@@ -6,6 +6,7 @@ from utils.db_api.models.models import Users, Expenses
 in_keyboard_main_expenses = InlineKeyboardMarkup(inline_keyboard=[
     [
         InlineKeyboardButton(text='Добавить расход', callback_data=cdb_menu_expenses.new(key='Add_exp')),
+        InlineKeyboardButton(text='Просмотреть', callback_data=cdb_menu_expenses.new(key='View_exp')),
         InlineKeyboardButton(text='Удалить', callback_data=cdb_menu_expenses.new(key='Del_exp')),
     ],
     [
