@@ -13,6 +13,6 @@ in_kb_main = InlineKeyboardMarkup(inline_keyboard=[
                              callback_data=cbd_menu.new(key='Expenses'))
     ],
     [
-        InlineKeyboardButton(text='Выход', callback_data='Cancel')
+        InlineKeyboardButton(text='Выход', callback_data=cbd_menu.new(key='Cancel'))
     ]
 ])

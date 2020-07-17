@@ -1,7 +1,6 @@
-from utils.db_api.models.func_model_categories import get_category_from_str
 from utils.db_api.models.func_model_user import get_user
-from utils.db_api.models.func_model_view_expenses import get_name_expense_from_category, search_name_expenses_in_db
-from utils.db_api.models.models import Expenses, Categories, ViewExpenses
+from utils.db_api.models.func_model_view_expenses import search_name_expenses_in_db
+from utils.db_api.models.models import Expenses, ViewExpenses
 from utils.db_api.utility_for_db import get_one_day_data_for_db
 
 

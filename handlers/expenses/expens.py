@@ -1,8 +1,10 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
-from keyboards.callback_data.callback import cbd_menu
+from handlers.main_menu.menu import cmd_start
+from keyboards.callback_data.callback import cbd_menu, cdb_menu_expenses
 from keyboards.in_line_keyboard.expenses import in_keyboard_main_expenses
+from keyboards.in_line_keyboard.menu import in_kb_main
 from setup import dp, bot
 
 
@@ -14,6 +16,17 @@ async def callback_vote_action(query: types.CallbackQuery):
                                 reply_markup=in_keyboard_main_expenses
                                 )
 
+
+@dp.callback_query_handler(cdb_menu_expenses.filter(key='Back'))
+async def menu_category_back(query: types.CallbackQuery):
+    await query.bot.edit_message_text('Главное меню', query.from_user.id, query.message.message_id,
+                                      reply_markup=in_kb_main)
+
+
+@dp.callback_query_handler(cdb_menu_expenses.filter(key='Exit'))
+async def menu_category_exit(query: types.CallbackQuery):
+    return await bot.edit_message_text('Досвидание :)',
+                                       query.from_user.id, query.message.message_id)
 
 # @dp.message_handler(state=StateAddExpenses.state_price)
 # async def process_name(message: types.Message, state: FSMContext):
