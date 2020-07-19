@@ -22,6 +22,17 @@ async def cmd_help(mes: types.Message):
     await mes.answer("Очистил", reply_markup=ReplyKeyboardRemove())
 
 
+@dp.message_handler(Command('test'))
+async def cmd_help(mes: types.Message):
+    text = """<b>bold БОЛТ!</b>, 
+        <strong>bold STRONG</strong>
+        <i>italic I- Италика</i>, 
+        <em>italic EM - Емешечка</em>
+        <a href="URL">inline URL Сылка</a>
+        <code>inline fixed-width code</code>
+        <pre>pre-formatted fixed-width code block</pre>
+        """
+    await mes.answer(text, reply_markup=ReplyKeyboardRemove())
 
 
 @dp.callback_query_handler(cbd_menu.filter(key='Cancel'))

@@ -4,7 +4,32 @@ from utils.db_api.models.models import ViewExpenses, Categories, Expenses, DoesN
 
 def get_name_expenses_from_category_generator(category: Categories):
     """Генератор видов расходов"""
-    sel = ViewExpenses.select(ViewExpenses.name_expense).where(ViewExpenses.category == category)
+    sel = ViewExpenses.select(ViewExpenses.name_expense).\
+        where(ViewExpenses.category == category).\
+        order_by(ViewExpenses.name_expense)
+    for i in sel:
+        yield i.name_expense
+
+
+def get_name_expenses_from_category(category):
+    sel = ViewExpenses.select(ViewExpenses.name_expense).\
+        where(ViewExpenses.category == category).\
+        order_by(ViewExpenses.name_expense)
+    return sel
+
+
+def get_count_expenses_for_paginator(category: Categories) -> int:
+    count = ViewExpenses.select(ViewExpenses.name_expense).where(ViewExpenses.category == category).count()
+    return count
+
+
+def get_name_expenses_from_category_paginator(category: Categories, page: int, count_page: int = 8):
+    """Пагинатор видов расходов"""
+    count = ViewExpenses.select(ViewExpenses.name_expense).where(ViewExpenses.category == category).count()
+    sel = ViewExpenses.select(ViewExpenses.name_expense)\
+        .where(ViewExpenses.category == category)\
+        .paginate(page, count_page)\
+        .order_by(ViewExpenses.name_expense)
     for i in sel:
         yield i.name_expense
 

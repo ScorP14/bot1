@@ -18,7 +18,7 @@ class Users(BaseModel):
     sub = BooleanField(default=False, verbose_name='Подсписка')
 
     class Meta:
-        order_be = ('date_add',)
+        order_by = ('date_add',)
 
 
 class Categories(BaseModel):
@@ -29,6 +29,9 @@ class ViewExpenses(BaseModel):
     category = ForeignKeyField(Categories, related_name='view_expenses')
     name_expense = CharField(primary_key=True, max_length=255, verbose_name='Расход', null=False, unique=True)
 
+    class Meta:
+
+        order_by = ('name_expense',)
 
 class Expenses(BaseModel):
     user = ForeignKeyField(Users, related_name='expenses', verbose_name='Пользователь')
@@ -38,7 +41,7 @@ class Expenses(BaseModel):
     price = FloatField(verbose_name='Цена', null=False)
 
     class Meta:
-        order_be = ('date_add',)
+        order_by = ('date_add',)
 
 
 def add_exp():

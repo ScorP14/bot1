@@ -5,8 +5,7 @@ from utils.db_api.models.models import Users, Expenses
 
 in_keyboard_main_expenses = InlineKeyboardMarkup(inline_keyboard=[
     [
-        InlineKeyboardButton(text='Добавить расход', callback_data=cdb_menu_expenses.new(key='Add_exp')),
-        InlineKeyboardButton(text='Добавить чек', callback_data=cdb_menu_expenses.new(key='Add_exp_cheque')),
+        InlineKeyboardButton(text='Добавить расход', callback_data=cdb_menu_expenses.new(key='Add_exp_menu')),
         InlineKeyboardButton(text='Просмотреть', callback_data=cdb_menu_expenses.new(key='View_exp')),
         InlineKeyboardButton(text='Удалить', callback_data=cdb_menu_expenses.new(key='Del_exp')),
     ],
@@ -20,6 +19,19 @@ in_keyboard_main_expenses = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 
+in_keyboard_main_expenses_add_exp = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text='Добавить 1 расход', callback_data=cdb_menu_expenses.new(key='Add_exp')),
+        InlineKeyboardButton(text='Добавить чек', callback_data=cdb_menu_expenses.new(key='Add_exp_cheque')),
+    ],
+    [
+        InlineKeyboardButton(text='<<< Назад', callback_data=cdb_menu_expenses.new(key='Back_from_add')),
+    ]
+    ,
+    [
+        InlineKeyboardButton(text='Выход', callback_data=cdb_menu_expenses.new(key='Exit'))
+    ]
+])
 
 
 

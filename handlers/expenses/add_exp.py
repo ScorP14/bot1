@@ -4,6 +4,7 @@ from aiogram.types import ReplyKeyboardRemove
 
 from keyboards.callback_data.callback import cdb_menu_expenses
 from keyboards.default_button.expense import rasxod, message_y_n
+from keyboards.in_line_keyboard.expenses import in_keyboard_main_expenses, in_keyboard_main_expenses_add_exp
 from setup import dp, bot
 from states.state import StateAddExpenses, StateAddExpensesCheque
 from utils.db_api.models.func_model_expenses import add_expenses
@@ -52,6 +53,7 @@ async def process_name(mes: types.Message, state: FSMContext):
         await mes.answer('Ну и хуй с тобой ...')
     await state.finish()
 
+
 @dp.message_handler(lambda message: message.text != 'Отмена', state=StateAddExpenses.state_category)
 async def process_name(mes: types.Message, state: FSMContext):
     print(mes.text)
@@ -80,4 +82,11 @@ async def cancel_handler(message: types.Message, state: FSMContext):
     if current_state is None:
         return
     await state.finish()
-    await message.reply('Отмена', reply_markup=types.ReplyKeyboardRemove())
+    await message.answer('Добавляем расход', reply_markup=in_keyboard_main_expenses_add_exp, parse_mode='HTML')
+
+
+@dp.callback_query_handler(cdb_menu_expenses.filter(key='Back_from_add'))
+async def menu_category_back(query: types.CallbackQuery):
+    await bot.edit_message_text('Расходы', query.from_user.id, query.message.message_id,
+                                reply_markup=in_keyboard_main_expenses
+                                )

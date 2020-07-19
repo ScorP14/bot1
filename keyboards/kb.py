@@ -1,13 +1,13 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
-from utils.db_api.main_db import User, get_10user
+from utils.db_api.models.models import Users
 
 
 def get_keyboard(id_tg):
-    user = User.get_or_none(id_tg)
+    user = Users.get_or_none(id_tg)
     if not user:
-        user = User()
+        user = Users()
     kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, keyboard=[
         [
             KeyboardButton('/help'),
